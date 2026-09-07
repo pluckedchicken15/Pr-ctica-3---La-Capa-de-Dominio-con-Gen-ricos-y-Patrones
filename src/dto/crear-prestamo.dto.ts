@@ -14,4 +14,6 @@
 
 import type { Prestamo } from '../dominio/prestamo.entity.js';
 
-export type CrearPrestamoDto = never; // TODO 3a: reemplazar por el Omit
+export type CrearPrestamoDto = Omit<Prestamo, 'folio' | 'creadoEn' | 'estado' | 'costoReposicion'>;
+
+// TODO 3a: reemplazar por el Omit

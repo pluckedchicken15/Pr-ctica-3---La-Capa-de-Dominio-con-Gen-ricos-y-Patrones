@@ -10,6 +10,9 @@
 import type { Repository } from './repository.js';
 import type { Prestamo } from './prestamo.entity.js';
 
-export interface PrestamoRepository {
+export interface PrestamoRepository extends Repository<Prestamo> {
   // TODO 1b: extender Repository<Prestamo> y agregar findByLibro
+  findByLibro(libroId: string): Promise<Prestamo[]>;
+
+  
 }

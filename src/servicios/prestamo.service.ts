@@ -29,8 +29,36 @@ import { EjemplarPrestadoError } from '../errores/ejemplar-prestado.error.js';
 
 export class PrestamoService {
   // TODO 4.1: constructor que recibe el repositorio
+  constructor(private readonly repo: PrestamoRepository) {}
 
   // TODO 4.2: metodo crear()
+  async crear(dto: CrearPrestamoDto): Promise<Prestamo> {
+    const delLibro = await this.repo.findByLibro(dto.libroId);
+
+
+    const fuera = delLibro.filter((p) => p.estado === 'activo' || p.estado === 'vencido').flatMap((p) => p.ejemplares);
+  
+    const choque = dto.ejemplares.find((e) => fuera.includes(e));
+
+    if (choque!= undefined) {
+      throw new EjemplarPrestadoError(choque);
+   }
+
+   const prestamo: Prestamo = {
+    folio: nuevoFolio(),
+    creadoEn: new Date(),
+    estado: 'activo',
+    costoReposicion: 350,
+    libroId: dto.libroId,
+    socioId: dto.socioId,
+    ejemplares: dto.ejemplares
+
+    }
+    return this.repo.save(prestamo);
+  }
 
   // TODO 4.3: metodo listarPorLibro()
+  async listarPorLibro(libroId: string): Promise<Prestamo[]> {
+    return this.repo.findByLibro(libroId);
+  }
 }
